@@ -6,3 +6,5 @@ ImasDbAndroidExample
 
 ついでにAndroidなプロジェクトは[Android KickstartR](http://androidkickstartr.com/) 使って作ってみよう！  
 なリポジトリ
+
+ちなみに、このリポジトリ作った人はアイマス知りません
