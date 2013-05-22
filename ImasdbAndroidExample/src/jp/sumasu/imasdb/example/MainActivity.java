@@ -4,18 +4,22 @@ package jp.sumasu.imasdb.example;
 import jp.sumasu.imasdb.example.pojo.CharacterTypeList;
 import jp.sumasu.imasdb.example.pojo.CharacterTypeList.CharacterType;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.googlecode.androidannotations.annotations.AfterViews;
 import com.googlecode.androidannotations.annotations.Background;
+import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
@@ -23,7 +27,7 @@ import com.googlecode.androidannotations.annotations.rest.RestService;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity
-        extends SherlockActivity
+        extends SherlockFragmentActivity
         implements OnNavigationListener
 {
 
@@ -33,6 +37,8 @@ public class MainActivity
     LinearLayout searchLayout;
     @ViewById(R.id.chara_type)
     Spinner characterType;
+    @ViewById(R.id.main_frame)
+    FrameLayout mainFrame;
 
     CharacterType[] mCharacterTypeList;
 
@@ -101,6 +107,23 @@ public class MainActivity
         searchLayout.setVisibility(View.VISIBLE);
 
         // TODO: キャッシュ処理入れてもいいかもね
+    }
+
+    @Click(R.id.search_button)
+    protected void onClickSearch() {
+        hello.setVisibility(View.GONE);
+        mainFrame.setVisibility(View.VISIBLE);
+        final int pos = characterType.getSelectedItemPosition();
+        int type = 0;
+        if (pos >= 0 && pos < mCharacterTypeList.length) {
+            type = mCharacterTypeList[pos].getType();
+        }
+        CharacterListFragment fragment = CharacterListFragment_.builder().type(type)
+                .includeProfile(false).build();
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction ft = manager.beginTransaction();
+        ft.replace(R.id.main_frame, fragment);
+        ft.commit();
     }
 
 }
